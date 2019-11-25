@@ -1,0 +1,404 @@
+
+TASK.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         0000023c  00000000  00000000  00000094  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000002  00800060  0000023c  000002d0  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .bss          00000001  00800062  00800062  000002d2  2**0
+                  ALLOC
+  3 .stab         0000084c  00000000  00000000  000002d4  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  4 .stabstr      00000794  00000000  00000000  00000b20  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 2a 00 	jmp	0x54	; 0x54 <__ctors_end>
+   4:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+   8:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+   c:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  10:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  14:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  18:	0c 94 da 00 	jmp	0x1b4	; 0x1b4 <__vector_6>
+  1c:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  20:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  24:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  28:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  2c:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  30:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  34:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  38:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  3c:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  40:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  44:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  48:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  4c:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  50:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+
+00000054 <__ctors_end>:
+  54:	11 24       	eor	r1, r1
+  56:	1f be       	out	0x3f, r1	; 63
+  58:	cf e5       	ldi	r28, 0x5F	; 95
+  5a:	d4 e0       	ldi	r29, 0x04	; 4
+  5c:	de bf       	out	0x3e, r29	; 62
+  5e:	cd bf       	out	0x3d, r28	; 61
+
+00000060 <__do_copy_data>:
+  60:	10 e0       	ldi	r17, 0x00	; 0
+  62:	a0 e6       	ldi	r26, 0x60	; 96
+  64:	b0 e0       	ldi	r27, 0x00	; 0
+  66:	ec e3       	ldi	r30, 0x3C	; 60
+  68:	f2 e0       	ldi	r31, 0x02	; 2
+  6a:	02 c0       	rjmp	.+4      	; 0x70 <.do_copy_data_start>
+
+0000006c <.do_copy_data_loop>:
+  6c:	05 90       	lpm	r0, Z+
+  6e:	0d 92       	st	X+, r0
+
+00000070 <.do_copy_data_start>:
+  70:	a2 36       	cpi	r26, 0x62	; 98
+  72:	b1 07       	cpc	r27, r17
+  74:	d9 f7       	brne	.-10     	; 0x6c <.do_copy_data_loop>
+
+00000076 <__do_clear_bss>:
+  76:	10 e0       	ldi	r17, 0x00	; 0
+  78:	a2 e6       	ldi	r26, 0x62	; 98
+  7a:	b0 e0       	ldi	r27, 0x00	; 0
+  7c:	01 c0       	rjmp	.+2      	; 0x80 <.do_clear_bss_start>
+
+0000007e <.do_clear_bss_loop>:
+  7e:	1d 92       	st	X+, r1
+
+00000080 <.do_clear_bss_start>:
+  80:	a3 36       	cpi	r26, 0x63	; 99
+  82:	b1 07       	cpc	r27, r17
+  84:	e1 f7       	brne	.-8      	; 0x7e <.do_clear_bss_loop>
+  86:	0e 94 ca 00 	call	0x194	; 0x194 <main>
+  8a:	0c 94 1c 01 	jmp	0x238	; 0x238 <_exit>
+
+0000008e <__bad_interrupt>:
+  8e:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+00000092 <leds_init>:
+ *      Author: mayar
+ */
+
+#include"leds.h"
+
+void leds_init(void){
+  92:	df 93       	push	r29
+  94:	cf 93       	push	r28
+  96:	cd b7       	in	r28, 0x3d	; 61
+  98:	de b7       	in	r29, 0x3e	; 62
+
+	/***** set leds bit to output ****/
+			SET_BIT(DDRC,0);
+  9a:	a4 e3       	ldi	r26, 0x34	; 52
+  9c:	b0 e0       	ldi	r27, 0x00	; 0
+  9e:	e4 e3       	ldi	r30, 0x34	; 52
+  a0:	f0 e0       	ldi	r31, 0x00	; 0
+  a2:	80 81       	ld	r24, Z
+  a4:	81 60       	ori	r24, 0x01	; 1
+  a6:	8c 93       	st	X, r24
+			SET_BIT(DDRC,1);
+  a8:	a4 e3       	ldi	r26, 0x34	; 52
+  aa:	b0 e0       	ldi	r27, 0x00	; 0
+  ac:	e4 e3       	ldi	r30, 0x34	; 52
+  ae:	f0 e0       	ldi	r31, 0x00	; 0
+  b0:	80 81       	ld	r24, Z
+  b2:	82 60       	ori	r24, 0x02	; 2
+  b4:	8c 93       	st	X, r24
+			SET_BIT(DDRC,2);
+  b6:	a4 e3       	ldi	r26, 0x34	; 52
+  b8:	b0 e0       	ldi	r27, 0x00	; 0
+  ba:	e4 e3       	ldi	r30, 0x34	; 52
+  bc:	f0 e0       	ldi	r31, 0x00	; 0
+  be:	80 81       	ld	r24, Z
+  c0:	84 60       	ori	r24, 0x04	; 4
+  c2:	8c 93       	st	X, r24
+
+}
+  c4:	cf 91       	pop	r28
+  c6:	df 91       	pop	r29
+  c8:	08 95       	ret
+
+000000ca <led1>:
+
+void led1(void){
+  ca:	df 93       	push	r29
+  cc:	cf 93       	push	r28
+  ce:	cd b7       	in	r28, 0x3d	; 61
+  d0:	de b7       	in	r29, 0x3e	; 62
+
+	CLEAR_BIT(PORTC,2);
+  d2:	a5 e3       	ldi	r26, 0x35	; 53
+  d4:	b0 e0       	ldi	r27, 0x00	; 0
+  d6:	e5 e3       	ldi	r30, 0x35	; 53
+  d8:	f0 e0       	ldi	r31, 0x00	; 0
+  da:	80 81       	ld	r24, Z
+  dc:	8b 7f       	andi	r24, 0xFB	; 251
+  de:	8c 93       	st	X, r24
+
+	SET_BIT(PORTC,0);
+  e0:	a5 e3       	ldi	r26, 0x35	; 53
+  e2:	b0 e0       	ldi	r27, 0x00	; 0
+  e4:	e5 e3       	ldi	r30, 0x35	; 53
+  e6:	f0 e0       	ldi	r31, 0x00	; 0
+  e8:	80 81       	ld	r24, Z
+  ea:	81 60       	ori	r24, 0x01	; 1
+  ec:	8c 93       	st	X, r24
+
+}
+  ee:	cf 91       	pop	r28
+  f0:	df 91       	pop	r29
+  f2:	08 95       	ret
+
+000000f4 <led2>:
+
+void led2(void){
+  f4:	df 93       	push	r29
+  f6:	cf 93       	push	r28
+  f8:	cd b7       	in	r28, 0x3d	; 61
+  fa:	de b7       	in	r29, 0x3e	; 62
+
+	CLEAR_BIT(PORTC,0);
+  fc:	a5 e3       	ldi	r26, 0x35	; 53
+  fe:	b0 e0       	ldi	r27, 0x00	; 0
+ 100:	e5 e3       	ldi	r30, 0x35	; 53
+ 102:	f0 e0       	ldi	r31, 0x00	; 0
+ 104:	80 81       	ld	r24, Z
+ 106:	8e 7f       	andi	r24, 0xFE	; 254
+ 108:	8c 93       	st	X, r24
+
+	SET_BIT(PORTC,1);
+ 10a:	a5 e3       	ldi	r26, 0x35	; 53
+ 10c:	b0 e0       	ldi	r27, 0x00	; 0
+ 10e:	e5 e3       	ldi	r30, 0x35	; 53
+ 110:	f0 e0       	ldi	r31, 0x00	; 0
+ 112:	80 81       	ld	r24, Z
+ 114:	82 60       	ori	r24, 0x02	; 2
+ 116:	8c 93       	st	X, r24
+}
+ 118:	cf 91       	pop	r28
+ 11a:	df 91       	pop	r29
+ 11c:	08 95       	ret
+
+0000011e <led3>:
+
+void led3(void){
+ 11e:	df 93       	push	r29
+ 120:	cf 93       	push	r28
+ 122:	cd b7       	in	r28, 0x3d	; 61
+ 124:	de b7       	in	r29, 0x3e	; 62
+
+	CLEAR_BIT(PORTC,1);
+ 126:	a5 e3       	ldi	r26, 0x35	; 53
+ 128:	b0 e0       	ldi	r27, 0x00	; 0
+ 12a:	e5 e3       	ldi	r30, 0x35	; 53
+ 12c:	f0 e0       	ldi	r31, 0x00	; 0
+ 12e:	80 81       	ld	r24, Z
+ 130:	8d 7f       	andi	r24, 0xFD	; 253
+ 132:	8c 93       	st	X, r24
+
+	SET_BIT(PORTC,2);
+ 134:	a5 e3       	ldi	r26, 0x35	; 53
+ 136:	b0 e0       	ldi	r27, 0x00	; 0
+ 138:	e5 e3       	ldi	r30, 0x35	; 53
+ 13a:	f0 e0       	ldi	r31, 0x00	; 0
+ 13c:	80 81       	ld	r24, Z
+ 13e:	84 60       	ori	r24, 0x04	; 4
+ 140:	8c 93       	st	X, r24
+}
+ 142:	cf 91       	pop	r28
+ 144:	df 91       	pop	r29
+ 146:	08 95       	ret
+
+00000148 <scheduler>:
+
+extern uint8 flag ;
+uint8 i = 1;
+
+
+void scheduler (void){
+ 148:	df 93       	push	r29
+ 14a:	cf 93       	push	r28
+ 14c:	cd b7       	in	r28, 0x3d	; 61
+ 14e:	de b7       	in	r29, 0x3e	; 62
+	while(1){
+
+       if ( 1 == flag ){
+ 150:	80 91 62 00 	lds	r24, 0x0062
+ 154:	81 30       	cpi	r24, 0x01	; 1
+ 156:	e1 f7       	brne	.-8      	; 0x150 <scheduler+0x8>
+
+    	   flag=0;
+ 158:	10 92 62 00 	sts	0x0062, r1
+
+			 if(1 == i){
+ 15c:	80 91 60 00 	lds	r24, 0x0060
+ 160:	81 30       	cpi	r24, 0x01	; 1
+ 162:	19 f4       	brne	.+6      	; 0x16a <scheduler+0x22>
+
+				 led1();
+ 164:	0e 94 65 00 	call	0xca	; 0xca <led1>
+ 168:	0f c0       	rjmp	.+30     	; 0x188 <scheduler+0x40>
+
+			 }
+			 else if(2 == i){
+ 16a:	80 91 60 00 	lds	r24, 0x0060
+ 16e:	82 30       	cpi	r24, 0x02	; 2
+ 170:	19 f4       	brne	.+6      	; 0x178 <scheduler+0x30>
+
+				 led2();
+ 172:	0e 94 7a 00 	call	0xf4	; 0xf4 <led2>
+ 176:	08 c0       	rjmp	.+16     	; 0x188 <scheduler+0x40>
+
+			 }
+			 else if (4 == i){
+ 178:	80 91 60 00 	lds	r24, 0x0060
+ 17c:	84 30       	cpi	r24, 0x04	; 4
+ 17e:	21 f4       	brne	.+8      	; 0x188 <scheduler+0x40>
+
+				 led3();
+ 180:	0e 94 8f 00 	call	0x11e	; 0x11e <led3>
+				 i=0;
+ 184:	10 92 60 00 	sts	0x0060, r1
+			 }
+    	   i++;
+ 188:	80 91 60 00 	lds	r24, 0x0060
+ 18c:	8f 5f       	subi	r24, 0xFF	; 255
+ 18e:	80 93 60 00 	sts	0x0060, r24
+ 192:	de cf       	rjmp	.-68     	; 0x150 <scheduler+0x8>
+
+00000194 <main>:
+       }
+    }
+}
+
+int main(){
+ 194:	df 93       	push	r29
+ 196:	cf 93       	push	r28
+ 198:	cd b7       	in	r28, 0x3d	; 61
+ 19a:	de b7       	in	r29, 0x3e	; 62
+
+    sei(); //enable interrupt
+ 19c:	78 94       	sei
+    leds_init();
+ 19e:	0e 94 49 00 	call	0x92	; 0x92 <leds_init>
+    timer1_init(); //init of timer1
+ 1a2:	0e 94 ef 00 	call	0x1de	; 0x1de <timer1_init>
+    scheduler();
+ 1a6:	0e 94 a4 00 	call	0x148	; 0x148 <scheduler>
+ 1aa:	80 e0       	ldi	r24, 0x00	; 0
+ 1ac:	90 e0       	ldi	r25, 0x00	; 0
+
+}
+ 1ae:	cf 91       	pop	r28
+ 1b0:	df 91       	pop	r29
+ 1b2:	08 95       	ret
+
+000001b4 <__vector_6>:
+
+#include"timer.h"
+
+  uint8 flag = 0;
+
+ISR(TIMER1_COMPA_vect){
+ 1b4:	1f 92       	push	r1
+ 1b6:	0f 92       	push	r0
+ 1b8:	0f b6       	in	r0, 0x3f	; 63
+ 1ba:	0f 92       	push	r0
+ 1bc:	11 24       	eor	r1, r1
+ 1be:	8f 93       	push	r24
+ 1c0:	df 93       	push	r29
+ 1c2:	cf 93       	push	r28
+ 1c4:	cd b7       	in	r28, 0x3d	; 61
+ 1c6:	de b7       	in	r29, 0x3e	; 62
+
+	flag=1;
+ 1c8:	81 e0       	ldi	r24, 0x01	; 1
+ 1ca:	80 93 62 00 	sts	0x0062, r24
+}
+ 1ce:	cf 91       	pop	r28
+ 1d0:	df 91       	pop	r29
+ 1d2:	8f 91       	pop	r24
+ 1d4:	0f 90       	pop	r0
+ 1d6:	0f be       	out	0x3f, r0	; 63
+ 1d8:	0f 90       	pop	r0
+ 1da:	1f 90       	pop	r1
+ 1dc:	18 95       	reti
+
+000001de <timer1_init>:
+
+void timer1_init(void){
+ 1de:	df 93       	push	r29
+ 1e0:	cf 93       	push	r28
+ 1e2:	cd b7       	in	r28, 0x3d	; 61
+ 1e4:	de b7       	in	r29, 0x3e	; 62
+
+	/******* 1024 prescaler - mode 4 "CTC" ***********/
+		    SET_BIT(TCCR1B,WGM12);
+ 1e6:	ae e4       	ldi	r26, 0x4E	; 78
+ 1e8:	b0 e0       	ldi	r27, 0x00	; 0
+ 1ea:	ee e4       	ldi	r30, 0x4E	; 78
+ 1ec:	f0 e0       	ldi	r31, 0x00	; 0
+ 1ee:	80 81       	ld	r24, Z
+ 1f0:	88 60       	ori	r24, 0x08	; 8
+ 1f2:	8c 93       	st	X, r24
+			SET_BIT(TCCR1B,CS10);
+ 1f4:	ae e4       	ldi	r26, 0x4E	; 78
+ 1f6:	b0 e0       	ldi	r27, 0x00	; 0
+ 1f8:	ee e4       	ldi	r30, 0x4E	; 78
+ 1fa:	f0 e0       	ldi	r31, 0x00	; 0
+ 1fc:	80 81       	ld	r24, Z
+ 1fe:	81 60       	ori	r24, 0x01	; 1
+ 200:	8c 93       	st	X, r24
+		    SET_BIT(TCCR1B,CS12);
+ 202:	ae e4       	ldi	r26, 0x4E	; 78
+ 204:	b0 e0       	ldi	r27, 0x00	; 0
+ 206:	ee e4       	ldi	r30, 0x4E	; 78
+ 208:	f0 e0       	ldi	r31, 0x00	; 0
+ 20a:	80 81       	ld	r24, Z
+ 20c:	84 60       	ori	r24, 0x04	; 4
+ 20e:	8c 93       	st	X, r24
+	 * tick every 1/7.8125 = 128us
+	 * for 1 sec .. 1sec/128u = 7813 ticks
+	 * set compare value to 7813 to reach one second
+	 */
+
+	 TCNT1 = 0; //initial value for the timer
+ 210:	ec e4       	ldi	r30, 0x4C	; 76
+ 212:	f0 e0       	ldi	r31, 0x00	; 0
+ 214:	11 82       	std	Z+1, r1	; 0x01
+ 216:	10 82       	st	Z, r1
+	 OCR1A = 7813;  // compare value
+ 218:	ea e4       	ldi	r30, 0x4A	; 74
+ 21a:	f0 e0       	ldi	r31, 0x00	; 0
+ 21c:	85 e8       	ldi	r24, 0x85	; 133
+ 21e:	9e e1       	ldi	r25, 0x1E	; 30
+ 220:	91 83       	std	Z+1, r25	; 0x01
+ 222:	80 83       	st	Z, r24
+
+	 SET_BIT(TIMSK,OCIE1A); //enable compare interrupt
+ 224:	a9 e5       	ldi	r26, 0x59	; 89
+ 226:	b0 e0       	ldi	r27, 0x00	; 0
+ 228:	e9 e5       	ldi	r30, 0x59	; 89
+ 22a:	f0 e0       	ldi	r31, 0x00	; 0
+ 22c:	80 81       	ld	r24, Z
+ 22e:	80 61       	ori	r24, 0x10	; 16
+ 230:	8c 93       	st	X, r24
+
+}
+ 232:	cf 91       	pop	r28
+ 234:	df 91       	pop	r29
+ 236:	08 95       	ret
+
+00000238 <_exit>:
+ 238:	f8 94       	cli
+
+0000023a <__stop_program>:
+ 23a:	ff cf       	rjmp	.-2      	; 0x23a <__stop_program>
